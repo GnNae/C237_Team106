@@ -22,6 +22,9 @@
             <li class="nav-item">
               <a class="nav-link" href="/logout">Logout</a>
             </li> 
+            <li class="nav-item">
+              <a class="nav-link" href="/search">Search Pets</a> <!-- Added search link for convenience -->
+            </li>
           </ul>
         </div>
       </div>
@@ -41,30 +44,20 @@
             <th width="50">Gender</th>
             <th width="50">Breed</th>
             <th width="50">Price</th>
-            <th width="50">Edit</th>
-            <th width="50">Delete</th>
+            <th width="50">Quantity</th> <!-- Changed header to Quantity -->
+            <th width="50">Action</th> <!-- Changed header to Action -->
           </tr>
       </thead>
       <tbody>
         <% for(let i=0; i < pets.length; i++) { %>
           <tr>
-            <td><a href="/product/<%= pets[i].petId %>" ><%= pets[i].name %></a></td>
+            <!-- Corrected pets[i].name to pets[i].petName based on common database column name -->
+            <td><a href="/product/<%= pets[i].petId %>" ><%= pets[i].petName %></a></td>
             <td><img src = "images/<%= pets[i].image %>" width="20%"></td>
             <td><%= pets[i].age %></td>
             <td><%= pets[i].gender %></td>
             <td><%= pets[i].breed %></td>
             <td>$<%= pets[i].price.toFixed(2) %></td>
-            <!-- <td>
-              <select id="role" name="role" class="form-control" >
-                <option value="1" selected >1</option>
-                <option value="2" >2</option>
-                <option value="3" >3</option>
-                <option value="4" >4</option>
-                <option value="5" >5</option>
-              </select>
-            </td> -->
-            <!-- Buy Link -->
-            <!-- <td><a href="/buyProduct/<%#= products[i].petId %>" class="btn btn-primary mt-3">Buy</a></td> -->
             <td>
               <select class="form-control" onchange="document.getElementById('quantity-<%= pets[i].petId %>').value = this.value">
                 <% for (let q = 1; q <= 5; q++) { %>
@@ -72,14 +65,12 @@
                 <% } %>
               </select>
             </td>
-
             <td>
                 <form action="/add-to-cart/<%= pets[i].petId %>" method="POST">
                   <input type="hidden" name="quantity" id="quantity-<%= pets[i].petId %>" value="1">
                   <button type="submit" class="btn btn-primary mt-3">Buy</button>
                 </form>
             </td>
-
           </tr>
         <% } %>
       </tbody>
