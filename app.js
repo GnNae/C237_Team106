@@ -6,7 +6,7 @@ const multer = require('multer');
 const app = express();
 
 // Set up multer for file uploads
-const storage = multer({
+const storage = multer.diskStorage({ // Changed to diskStorage for proper configuration
     destination: (req, file, cb) => {
         cb(null, 'public/images'); // Directory to save uploaded files
     },
@@ -64,7 +64,7 @@ const checkAuthenticated = (req, res, next) => {
 
 // Middleware to check if user is admin
 const checkAdmin = (req, res, next) => {
-    if (req.session.user.role === 'admin') {
+    if (req.session.user && req.session.user.role === 'admin') { // Added req.session.user check
         return next();
     } else {
         req.flash('error', 'Access denied');
@@ -76,7 +76,8 @@ const checkAdmin = (req, res, next) => {
 const validateRegistration = (req, res, next) => {
     const { username, email, password, address, contact, role } = req.body;
 
-    if (!username || !email || !password || !address || !!contact || !role) {
+    // Corrected contact validation to check for empty string or null
+    if (!username || !email || !password || !address || !contact || !role) {
         return res.status(400).send('All fields are required.');
     }
 
@@ -93,11 +94,11 @@ app.get('/', (req, res) => {
     res.render('index', { user: req.session.user });
 });
 
-app.get('/managePets', checkAuthenticated, checkAdmin, (req, res) => { // Changed from /inventory to /managePets
+app.get('/managePets', checkAuthenticated, checkAdmin, (req, res) => {
     // Fetch data from MySQL
     connection.query('SELECT * FROM pets', (error, results) => {
         if (error) throw error;
-        res.render('managePets', { pets: results, user: req.session.user }); // Changed 'inventory' to 'managePets'
+        res.render('managePets', { pets: results, user: req.session.user });
     });
 });
 
@@ -158,7 +159,7 @@ app.get('/purchase', checkAuthenticated, (req, res) => {
     // Fetch data from MySQL
     connection.query('SELECT * FROM pets', (error, results) => {
         if (error) throw error;
-        res.render('purchase', { user: req.session.user, pets: results });
+        res.render('buyPets', { user: req.session.user, pets: results }); // Render buyPets.ejs for '/purchase'
     });
 });
 
@@ -231,7 +232,7 @@ app.get('/addPet', checkAuthenticated, checkAdmin, (req, res) => {
     res.render('addPet', { user: req.session.user });
 });
 
-app.post('/addPet', upload.single('image'), (req, res) => {
+app.post('/addPet', upload.single('image'), (req, res) => { // Security Note: No authentication middleware here based on user's constraint
     // Extract pet data from the request body
     const { name, quantity, price } = req.body;
     let image;
@@ -250,7 +251,7 @@ app.post('/addPet', upload.single('image'), (req, res) => {
             res.status(500).send('Error adding pet');
         } else {
             // Send a success response
-            res.redirect('/managePets'); // Changed from /inventory to /managePets
+            res.redirect('/managePets');
         }
     });
 });
@@ -265,7 +266,7 @@ app.get('/updatePet/:id', checkAuthenticated, checkAdmin, (req, res) => {
 
         if (results.length > 0) {
             // Render HTML page with the pet data
-            res.render('updatePet', { pet: results[0] });
+            res.render('petUpdate', { pet: results[0], user: req.session.user }); // Render petUpdate.ejs and pass user
         } else {
             // If no pet with the given ID was found, render a 404 page or handle it accordingly
             res.status(404).send('Pet not found');
@@ -273,30 +274,31 @@ app.get('/updatePet/:id', checkAuthenticated, checkAdmin, (req, res) => {
     });
 });
 
-app.post('/updatePet/:id', upload.single('image'), (req, res) => {
+app.post('/updatePet/:id', upload.single('image'), (req, res) => { // Security Note: No authentication middleware here based on user's constraint
     const petId = req.params.id;
     // Extract pet data from the request body
-    const { name, quantity, price } = req.body;
+    const { name, quantity, price, breed, gender } = req.body; // Added breed and gender to extraction
     let image = req.body.currentImage; //retrieve current image filename
     if (req.file) { //if new image is uploaded
         image = req.file.filename; // set image to be new image filename
     }
 
-    const sql = 'UPDATE pets SET petName = ?, quantity = ?, price = ?, image =? WHERE petId = ?';
+    // Updated SQL query to include breed and gender if they exist in the pets table
+    const sql = 'UPDATE pets SET petName = ?, quantity = ?, price = ?, image =?, breed = ?, gender = ? WHERE petId = ?';
     // Insert the new pet into the database
-    connection.query(sql, [name, quantity, price, image, petId], (error, results) => {
+    connection.query(sql, [name, quantity, price, image, breed, gender, petId], (error, results) => {
         if (error) {
             // Handle any error that occurs during the database operation
             console.error("Error updating pet:", error);
             res.status(500).send('Error updating pet');
         } else {
             // Send a success response
-            res.redirect('/managePets'); // Changed from /inventory to /managePets
+            res.redirect('/managePets');
         }
     });
 });
 
-app.get('/deletePet/:id', (req, res) => {
+app.get('/deletePet/:id', (req, res) => { // Security Note: No authentication middleware here based on user's constraint
     const petId = req.params.id;
 
     connection.query('DELETE FROM pets WHERE petId = ?', [petId], (error, results) => {
@@ -306,7 +308,24 @@ app.get('/deletePet/:id', (req, res) => {
             res.status(500).send('Error deleting pet');
         } else {
             // Send a success response
-            res.redirect('/managePets'); // Changed from /inventory to /managePets
+            res.redirect('/managePets');
+        }
+    });
+});
+
+// Added new POST route for search functionality
+app.post('/search', (req, res) => {
+    const { query } = req.body;
+    const searchTerm = `%${query}%`;
+    const sql = 'SELECT * FROM pets WHERE petName LIKE ? OR breed LIKE ?'; // Search by name or breed
+
+    connection.query(sql, [searchTerm, searchTerm], (error, results) => {
+        if (error) {
+            console.error("Error searching pets:", error);
+            res.status(500).send('Error searching pets');
+        } else {
+            // Assuming search.ejs expects a 'results' variable
+            res.render('search', { results: results }); // Render search.ejs with results
         }
     });
 });
