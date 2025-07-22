@@ -1,5 +1,3 @@
-<!-- pet.ejs -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,7 +18,7 @@
             <ul class="navbar-nav">
               <% if (user.role === "admin") { %>
                 <li class="nav-item">
-                  <a class="nav-link" href="/inventory">Inventory</a>
+                  <a class="nav-link" href="/inventory">Inventory</a> <!-- Matches app.js /inventory -->
                 </li> 
                 <li class="nav-item">
                   <a class="nav-link" href="/addPet">Add New Pet</a>
@@ -52,9 +50,9 @@
             <p>No product found.</p>
         <% } %>
         <% if (user.role === "admin") { %>
-          <a href ="/inventory">Back</a>
+          <a href ="/inventory">Back</a> <!-- Matches app.js /inventory -->
         <% } else { %>
-          <a href ="/shopping">Back</a>
+          <a href ="/shopping">Back</a> <!-- Matches app.js /shopping -->
         <% } %>
     </div>
     
