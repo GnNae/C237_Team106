@@ -256,7 +256,7 @@ app.post('/addPet', upload.single('image'), (req, res) => { // Security Note: No
     });
 });
 
-app.get('/updatePet/:id', checkAuthenticated, checkAdmin, (req, res) => {
+app.get('/petUpdate/:id', checkAuthenticated, checkAdmin, (req, res) => {
     const petId = req.params.id;
     const sql = 'SELECT * FROM pets WHERE petId = ?';
 
