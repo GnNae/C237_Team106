@@ -21,7 +21,7 @@ const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'c237_petshopdb' // Database name
+    database: 'pet' // Database name
 });
 
 connection.connect((err) => {
