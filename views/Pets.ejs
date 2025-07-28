@@ -18,10 +18,10 @@
             <ul class="navbar-nav">
               <% if (user.role === "admin") { %>
                 <li class="nav-item">
-                  <a class="nav-link" href="/inventory">Inventory</a> <!-- Matches app.js /inventory -->
+                  <a class="nav-link" href="/managePets">Manage Pets</a>
                 </li> 
                 <li class="nav-item">
-                  <a class="nav-link" href="/addPet">Add New Pet</a>
+                  <a class="nav-link" href="/addPets">Add New Pet</a>
                 </li> 
               <% } %>
               <li class="nav-item">
@@ -43,16 +43,15 @@
                 <p><b>Image:</b><br> <img src = "../images/<%= pet.image %>" width="20%"></p>
                 <p><b>Name:</b><br> <%= pet.petName %></p>
                 <p><b>Age:</b><br> <%= pet.age %></p>
-                <p><b>Gender:</b><br> <%= pet.gender %></p>
                 <p><b>Price:</b><br> $<%= pet.price.toFixed(2) %></p> 
             </div>
         <% } else { %>
             <p>No product found.</p>
         <% } %>
         <% if (user.role === "admin") { %>
-          <a href ="/inventory">Back</a> <!-- Matches app.js /inventory -->
+          <a href ="/managePets">Back</a>
         <% } else { %>
-          <a href ="/shopping">Back</a> <!-- Matches app.js /shopping -->
+          <a href ="/buyPets">Back</a>
         <% } %>
     </div>
     
