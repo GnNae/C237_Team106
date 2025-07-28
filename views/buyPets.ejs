@@ -48,7 +48,6 @@
       <tbody>
         <% for(let i=0; i < pets.length; i++) { %>
           <tr>
-            <!-- Corrected pets[i].name to pets[i].petName based on common database column name -->
             <td><a href="/product/<%= pets[i].petID %>" ><%= pets[i].petName %></a></td>
             <td><img src = "images/<%= pets[i].image %>" width="20%"></td>
             <td><%= pets[i].age %></td>
