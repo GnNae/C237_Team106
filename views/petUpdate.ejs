@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-        <title>The Pet Shop</title>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <title>The Pet Shop</title>
+</head>
 <body>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
         <div class="container-fluid">
@@ -30,31 +30,56 @@
         <br>
         <div class="text-center">
           <% if (pet) { %> 
-            <form action="/editPet/<%= pet.pet %>" method="POST" enctype="multipart/form-data">
-                <label for="name">Name:</label><br>
-                <input type="text" id="name" name="name" value = "<%= pet.petName %>" required><br><br>
-
-                <label for="quantity">Age:</label><br>
-                <input type="number" id="Age" name="Age" min="0" step="1" value = <%= pet.age %> required><br><br>
-
-                <label for="price">Price:</label><br>
-                <input type="number" id="price" name="price" min="0" step="0.01" value = <%= pet.price %> required><br><br>
-
-                <label for="breed">Breed:</label><br>
-                <input type="text" id="breed" name="breed" value = <%= pet.breed %> required><br><br>
-
-                <label for="image">Current Image:</label><br>
-                <input type="text" name="currentImage" value = <%= pet.image %> readonly><br>
-                <img src = "/images/<%= pet.image %>" width="20%"><br><br>
-
-                New Image:<br><input type = "file" id="image" name="image" accept="image/*" value<%=pet.image %> ><br><br> 
-
-                <button type="submit">Update Pet</button>
-            </form>
+            <form action="/updatePet/<%= pet.petID %>" method="POST" enctype="multipart/form-data">
+    <!-- Name -->
+    <div class="mb-3">
+        <label for="name" class="form-label">Name:</label>
+        <input type="text" class="form-control" id="name" name="name" value="<%= pet.name %>" required>
+    </div>
+    
+    <!-- Age (mapped to age column) -->
+    <div class="mb-3">
+        <label for="Age" class="form-label">Age:</label>
+        <input type="number" class="form-control" id="Age" name="Age" min="0" value="<%= pet.age %>" required>
+    </div>
+    
+    <!-- Price -->
+    <div class="mb-3">
+        <label for="price" class="form-label">Price:</label>
+        <input type="number" class="form-control" id="price" name="price" min="0" step="0.01" value="<%= pet.price %>" required>
+    </div>
+    
+    <!-- Breed -->
+    <div class="mb-3">
+        <label for="breed" class="form-label">Breed:</label>
+        <input type="text" class="form-control" id="breed" name="breed" value="<%= pet.breed %>" required>
+    </div>
+    
+    <!-- Gender -->
+    <div class="mb-3">
+        <label for="gender" class="form-label">Gender:</label>
+        <input type="text" class="form-control" id="gender" name="gender" value="<%= pet.gender %>" required>
+    </div>
+    
+    <!-- Current Image -->
+    <div class="mb-3">
+        <label class="form-label">Current Image:</label><br>
+        <input type="hidden" name="currentImage" value="<%= pet.image %>">
+        <img src="/images/<%= pet.image %>" width="200" class="img-thumbnail mb-2"><br>
+    </div>
+    
+    <!-- New Image -->
+    <div class="mb-3">
+        <label for="image" class="form-label">New Image:</label>
+        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Update Pet</button>
+</form>
           <% } else { %>
-              <p>No Pet found.</p>
+              <p class="alert alert-danger">No Pet found.</p>
           <% } %>
-          <a href ="/">Back</a>
+          <a href="/managePets" class="btn btn-secondary mt-3">Back to Manage Pets</a>
         </div>
     </div>
 </body>
