@@ -30,7 +30,7 @@
         <br>
         <div class="text-center">
           <% if (pet) { %> 
-            <form action="/updatePet/<%= pet.pet %>" method="POST" enctype="multipart/form-data">
+            <form action="/updatePet/id method="POST" enctype="multipart/form-data">
                 <label for="name">Name:</label><br>
                 <input type="text" id="name" name="name" value = "<%= pet.name %>" required><br><br>
 
@@ -47,7 +47,7 @@
                 <input type="text" name="currentImage" value=<%= pet.image %> readonly><br>
                 <img src = "/images/<%= pet.image %>" width="20%"><br><br>
 
-                New Image:<br><input type = "file" id="image" name="image" accept="image/*" ><br><br>  // remove value=<%=pet.image %> 
+                New Image:<br><input type= "file" id="image" name="image" accept="image/*" ><br><br>  // remove value=<%=pet.image %> 
 
                 <button type="submit">Update Pet</button>
             </form>
