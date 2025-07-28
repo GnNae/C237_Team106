@@ -17,7 +17,7 @@
           <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link" href="/addPet">Add New Pet</a>
+                <a class="nav-link" href="/addPets">Add New Pet</a>
               </li> 
             </ul>
           </div>
@@ -26,13 +26,13 @@
 
     <div class="container">
         <br>
-        <div class="text-center"><h2>Update Pet</h2></div>
+        <div class="text-center"><h2>Update Pets</h2></div>
         <br>
         <div class="text-center">
           <% if (pet) { %> 
             <form action="/editPet/<%= pet.pet %>" method="POST" enctype="multipart/form-data">
                 <label for="name">Name:</label><br>
-                <input type="text" id="name" name="name" value = "<%= pet.petName %>" required><br><br>
+                <input type="text" id="name" name="name" value = "<%= pet.name %>" required><br><br>
 
                 <label for="quantity">Age:</label><br>
                 <input type="number" id="Age" name="Age" min="0" step="1" value = <%= pet.age %> required><br><br>
