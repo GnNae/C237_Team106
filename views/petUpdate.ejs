@@ -17,7 +17,7 @@
           <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link" href="/addProduct">Add New Pet</a>
+                <a class="nav-link" href="/addPet">Add New Pet</a>
               </li> 
             </ul>
           </div>
@@ -29,8 +29,8 @@
         <div class="text-center"><h2>Update Pet</h2></div>
         <br>
         <div class="text-center">
-          <% if (product) { %> 
-            <form action="/editProduct/<%= product.productId %>" method="POST" enctype="multipart/form-data">
+          <% if (pet) { %> 
+            <form action="/editPet/<%= pet.pet %>" method="POST" enctype="multipart/form-data">
                 <label for="name">Name:</label><br>
                 <input type="text" id="name" name="name" value = "<%= pet.petName %>" required><br><br>
 
@@ -44,10 +44,10 @@
                 <input type="text" id="breed" name="breed" value = <%= pet.breed %> required><br><br>
 
                 <label for="image">Current Image:</label><br>
-                <input type="text" name="currentImage" value = <%= product.image %> readonly><br>
-                <img src = "/images/<%= product.image %>" width="20%"><br><br>
+                <input type="text" name="currentImage" value = <%= pet.image %> readonly><br>
+                <img src = "/images/<%= pet.image %>" width="20%"><br><br>
 
-                New Image:<br><input type = "file" id="image" name="image" accept="image/*" value<%=product.image %> ><br><br> 
+                New Image:<br><input type = "file" id="image" name="image" accept="image/*" value<%=pet.image %> ><br><br> 
 
                 <button type="submit">Update Pet</button>
             </form>
