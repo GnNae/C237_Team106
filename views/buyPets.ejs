@@ -52,8 +52,8 @@
         <% for(let i=0; i < pets.length; i++) { %>
           <tr>
             <!-- Corrected pets[i].name to pets[i].petName based on common database column name -->
-            <td><a href="images/<%= pets[i].petId %>" ><%= pets[i].petName %></a></td>
-            <td><img src = "images/<%= pets[i].image %>" width="20%"></td>
+            <td><a href="images/<%= pets[i].petId %>" ><%= pets[i].name %></a></td> //change to pets[i].name
+            <td><img src = "<%= pets[i].image %>" width="20%"></td> // change to img src = "<%= pets[i].image %>" width="20%"
             <td><%= pets[i].age %></td>
             <td><%= pets[i].gender %></td>
             <td><%= pets[i].breed %></td>
