@@ -257,42 +257,55 @@ app.post('/addPet', upload.single('image'), (req, res) => { // Security Note: No
     });
 });
 
+// GET route - Render the pet update form
 app.get('/petUpdate/:id', checkAuthenticated, checkAdmin, (req, res) => {
     const petId = req.params.id;
-    const sql = 'SELECT * FROM pets WHERE petID = ?'; // Fix case to petID
-    
+    const sql = 'SELECT * FROM pets WHERE petID = ?'; // Ensure correct column name
+
     connection.query(sql, [petId], (error, results) => {
-        if (error) throw error;
+        if (error) {
+            console.error("Error fetching pet:", error);
+            return res.status(500).send('Database error');
+        }
+
         if (results.length > 0) {
-            res.render('petUpdate', { pet: results[0], user: req.session.user });
+            res.render('petUpdate', {
+                pet: results[0],
+                user: req.session.user
+            });
         } else {
             res.status(404).send('Pet not found');
         }
     });
 });
 
-app.post('/updatePet/:id', upload.single('image'), (req, res) => { // Security Note: No authentication middleware here based on user's constraint
-    const petId = req.params.id;
-    // Extract pet data from the request body
-    const { name, quantity, price, breed, gender } = req.body; // Added breed and gender to extraction
-    let image = req.body.currentImage; //retrieve current image filename
-    if (req.file) { //if new image is uploaded
-        image = req.file.filename; // set image to be new image filename
-    }
 
-    // Updated SQL query to include breed and gender if they exist in the pets table
-    const sql = 'UPDATE pets SET petName = ?, quantity = ?, price = ?, image =?, breed = ?, gender = ? WHERE petId = ?';
-    // Insert the new pet into the database
-    connection.query(sql, [name, quantity, price, image, breed, gender, petId], (error, results) => {
-        if (error) {
-            // Handle any error that occurs during the database operation
-            console.error("Error updating pet:", error);
-            res.status(500).send('Error updating pet');
-        } else {
-            // Send a success response
+// POST route - Update the pet in the database
+app.post('/updatePet/:id', checkAuthenticated, checkAdmin, upload.single('image'), (req, res) => {
+    const petId = req.params.id;
+    const { name, Age, price, breed, gender, currentImage } = req.body;
+    
+    const image = req.file ? req.file.filename : currentImage;
+
+    // Match EXACT column names from your database schema
+    const sql = `
+        UPDATE pets 
+        SET name = ?, age = ?, price = ?, image = ?, breed = ?, gender = ?
+        WHERE petID = ?
+    `;
+    
+    connection.query(sql, 
+        [name, Age, price, image, breed, gender, petId], 
+        (error, results) => {
+            if (error) {
+                console.error("Error updating pet:", error);
+                req.flash('error', 'Failed to update pet');
+                return res.redirect(`/petUpdate/${petId}`);
+            }
+            req.flash('success', 'Pet updated successfully');
             res.redirect('/managePets');
         }
-    });
+    );
 });
 
 app.get('/deletePet/:id', (req, res) => { 
