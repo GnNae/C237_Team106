@@ -330,5 +330,22 @@ app.post('/search', (req, res) => {
     });
 });
 
+//create.ejs form submission
+app.post('/addItem', (req, res) => {
+  const { name, breed, age, price, imageUrl } = req.body;
+  
+  const sql = `INSERT INTO pet (name, breed, age, price, image) VALUES ('${name}', '${breed}', '${age}', '${price}', '${image}')`;
+  
+  db.query(sql, [name, breed, age, price, imageUrl], (err, result) => {
+    if (err) {
+      console.log('Error:', err);
+      res.send('Error adding pet');
+    } else {
+      console.log('Pet is added');
+      res.send('Succesfully added pet.');
+    }
+  });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
