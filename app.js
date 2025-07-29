@@ -210,25 +210,6 @@ app.get('/logout', (req, res) => {
     res.redirect('/');
 });
 
-app.get('/pet/:id', checkAuthenticated, (req, res) => {
-    // Extract the pet ID from the request parameters
-    const petId = req.params.id;
-
-    // Fetch data from MySQL based on the pet ID
-    connection.query('SELECT * FROM pets WHERE petId = ?', [petId], (error, results) => {
-        if (error) throw error;
-
-        // Check if any pet with the given ID was found
-        if (results.length > 0) {
-            // Render HTML page with the pet data
-            res.render('pet', { pet: results[0], user: req.session.user });
-        } else {
-            // If no pet with the given ID was found, render a 404 page or handle it accordingly
-            res.status(404).send('Pet not found');
-        }
-    });
-});
-
 app.get('/addPet', checkAuthenticated, checkAdmin, (req, res) => {
     res.render('addPet', { user: req.session.user });
 });
