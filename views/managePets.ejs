@@ -56,7 +56,7 @@
             <td><%= pets[i].breed %></td>
             <td>$<%= pets[i].price %></td>
             <!-- Edit Link - Kept original /updateProduct route to match app.js -->
-            <td><a href="/updateProduct/<%= pets[i].petID %>">Edit</a></td>
+            <td><a href="/petUpdate/<%= pets[i].petID %>">Edit</a></td>
             <!-- Delete Link - Kept original /deleteProduct route to match app.js -->
          <td><a href="/deletePet/<%= pets[i].petID %>" onclick="return confirm('Are you sure you want to delete this pet?')">Delete</a></td>
         </tr>
